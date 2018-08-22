@@ -44,37 +44,8 @@ class IcoWatchListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardWidget(
+      onMenuClicked: () {},
       child: buildBody(),
-    );
-//    return Padding(
-//      padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
-//      child: Container(
-//        decoration: BoxDecoration(
-//          color: Color(0xFF1B224E),
-//          borderRadius: BorderRadius.all(Radius.circular(6.0)),
-//        ),
-//        child: Stack(
-//          children: <Widget>[
-//            buildBody(),
-//            buildMenu(),
-//          ],
-//        ),
-//      ),
-//    );
-  }
-
-  Positioned buildMenu() {
-    return Positioned(
-      right: 0.0,
-      child: SizedBox(
-        width: 44.0,
-        height: 44.0,
-        child: IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.more_vert),
-          color: Styles.cnm_white,
-        ),
-      ),
     );
   }
 
