@@ -71,12 +71,46 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
       ),
-      body: IcoOngoingItem.forTest(),
+      body: _buildIcoOngoingItem(context),
       floatingActionButton: new FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: new Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget _buildIcoOngoingItem(BuildContext context) {
+    var item = {
+      "name": "KimeraKimeraKimera",
+      "symbol": "KIMERA",
+      "category": "Business Services & Consulting",
+      "score": "4.7"
+    };
+
+    var onItemClicked = () {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return Text("item clicked");
+          });
+    };
+    var onButtonClicked = () {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return Text("button clicked");
+          });
+    };
+    return IcoOngoingItem(
+      name: item["name"],
+      symbol: item['symbol'],
+      category: item['category'],
+      score: item['score'],
+      onItemClicked: onItemClicked,
+      onAlertClicked: onButtonClicked,
+      onFavoriteClicked: onButtonClicked,
+      idx: 1,
     );
   }
 }
