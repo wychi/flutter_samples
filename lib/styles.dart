@@ -55,7 +55,7 @@ class Styles {
   static const cnm_cyan_300_40pa = const Color(0x6639e5ff);
   static const cnm_cyan_300_30pa = const Color(0x4d39e5ff);
   static const dark_blue_grey = const Color(0xff1b224e);
-  static const cnm_indigo_700_60 = const Color(0x993c4593);
+  static const cnm_indigo_700_60pa = const Color(0x993c4593);
 
   static const headline_xlarge = const TextStyle(
       fontWeight: FontWeight.w700,
