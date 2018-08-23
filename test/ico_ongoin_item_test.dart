@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ico_ongoing_item.dart';
+import 'package:flutter_app/styles.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'test_helper.dart';
@@ -62,6 +63,49 @@ void main() {
     await expectLater(
       find.byType(IcoOngoingItem),
       matchesGoldenFile('golden/IcoOngoingItem_Long.png'),
+    );
+  }));
+
+  testWidgets('state_test', mockTester((WidgetTester tester) async {
+    const int idx = 100;
+    var item = {
+      "name": "KimeraKimeraKimeraKimera",
+      "symbol": "KIMERAKIMERAKIMERA",
+      "category": "Business Services & Consulting",
+      "score": "4.7",
+      "favorite_added": true,
+      "alert_added": true,
+    };
+
+    await tester.pumpWidget(
+      wrap(
+        IcoOngoingItem.forTest(item, idx),
+      ),
+    );
+
+    {
+      expect(find.byIcon(Icons.star_border), findsOneWidget);
+      final IconButton widget =
+          tester.firstWidget(find.byKey(Key("add_favorite")));
+      expect(widget.color, Styles.cnm_orange_300);
+    }
+    {
+      expect(find.byIcon(Icons.add_alert), findsOneWidget);
+      final IconButton widget =
+          tester.firstWidget(find.byKey(Key("add_alert")));
+      expect(widget.color, Styles.cnm_orange_300);
+    }
+
+    expect(find.byType(Image), findsOneWidget);
+    expect(find.text("$idx"), findsOneWidget);
+    expect(find.text(item["name"]), findsOneWidget);
+    expect(find.text(item["symbol"]), findsOneWidget);
+    expect(find.text(item["category"]), findsOneWidget);
+    expect(find.text(item["score"]), findsOneWidget);
+
+    await expectLater(
+      find.byType(IcoOngoingItem),
+      matchesGoldenFile('golden/IcoOngoingItem_State.png'),
     );
   }));
 }

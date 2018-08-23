@@ -10,6 +10,8 @@ class IcoOngoingItem extends StatelessWidget {
   final String symbol;
   final String category;
   final String score;
+  final bool favoriteAdded;
+  final bool alertAdded;
 
   final bool forDesign;
 
@@ -20,6 +22,8 @@ class IcoOngoingItem extends StatelessWidget {
     @required this.score,
     @required this.idx,
     bool forDesign = false,
+    this.alertAdded = false,
+    this.favoriteAdded = false,
   })  : assert(name != null),
         assert(symbol != null),
         assert(category != null),
@@ -28,7 +32,7 @@ class IcoOngoingItem extends StatelessWidget {
         forDesign = forDesign;
 
   factory IcoOngoingItem.forTest(
-      [Map<String, String> item, int idx = 10, bool forDesign = false]) {
+      [Map<String, dynamic> item, int idx = 10, bool forDesign = false]) {
     if (item == null) {
       item = {
         "name": "KimeraKimeraKimera",
@@ -43,6 +47,8 @@ class IcoOngoingItem extends StatelessWidget {
       symbol: item['symbol'],
       category: item['category'],
       score: item['score'],
+      alertAdded: item['alert_added'],
+      favoriteAdded: item['favorite_added'],
       idx: idx,
       forDesign: forDesign,
     );
@@ -184,7 +190,8 @@ class IcoOngoingItem extends StatelessWidget {
                 key: Key("add_alert"),
                 icon: Icon(Icons.add_alert),
                 iconSize: 20.0,
-                color: Styles.cnm_white_40pa,
+                color:
+                    alertAdded ? Styles.cnm_orange_300 : Styles.cnm_white_40pa,
                 onPressed: () {},
               ),
             ),
@@ -199,7 +206,9 @@ class IcoOngoingItem extends StatelessWidget {
                 icon: Icon(Icons.star_border),
                 iconSize: 20.0,
                 padding: const EdgeInsets.all(0.0),
-                color: Styles.cnm_white_40pa,
+                color: favoriteAdded
+                    ? Styles.cnm_orange_300
+                    : Styles.cnm_white_40pa,
                 onPressed: () {},
               ),
             ),
