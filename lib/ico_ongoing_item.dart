@@ -86,7 +86,9 @@ class IcoOngoingItem extends StatelessWidget {
                   width: 8.0,
                 ),
                 _forDesignVisibility(
-                  child: Text("$idx", style: Styles.text_xsmall),
+                  child: Text("$idx",
+                      style: Styles.text_xsmall
+                          .copyWith(color: Styles.cnm_white_40pa)),
                 ),
                 SizedBox(
                   width: 13.5,
@@ -136,7 +138,14 @@ class IcoOngoingItem extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Text(category, style: Styles.text_xsmall),
+                      Text(
+                        category,
+                        maxLines: 1,
+                        softWrap: false,
+                        overflow: TextOverflow.fade,
+                        style: Styles.text_xsmall
+                            .copyWith(color: Styles.cnm_white_40pa),
+                      ),
                     ],
                   ),
                 ),
