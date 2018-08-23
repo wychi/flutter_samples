@@ -35,6 +35,8 @@ Widget wrap(Widget widget) {
   );
 }
 
-class MockCallbackHandler extends Mock {
-  VoidCallback get onClicked;
+class ClickListener {
+  onClicked() {}
 }
+
+class MockCallbackHandler extends Mock implements ClickListener {}

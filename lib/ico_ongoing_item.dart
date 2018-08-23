@@ -15,6 +15,10 @@ class IcoOngoingItem extends StatelessWidget {
 
   final bool forDesign;
 
+  var onItemClicked;
+  var onFavoriteClicked;
+  var onAlertClicked;
+
   IcoOngoingItem({
     @required this.name,
     @required this.symbol,
@@ -24,6 +28,9 @@ class IcoOngoingItem extends StatelessWidget {
     bool forDesign = false,
     this.alertAdded = false,
     this.favoriteAdded = false,
+    this.onItemClicked,
+    this.onAlertClicked,
+    this.onFavoriteClicked,
   })  : assert(name != null),
         assert(symbol != null),
         assert(category != null),
@@ -49,6 +56,9 @@ class IcoOngoingItem extends StatelessWidget {
       score: item['score'],
       alertAdded: item['alert_added'],
       favoriteAdded: item['favorite_added'],
+      onItemClicked: item['onItemClicked'],
+      onAlertClicked: item['onAlertClicked'],
+      onFavoriteClicked: item['onFavoriteClicked'],
       idx: idx,
       forDesign: forDesign,
     );
@@ -79,14 +89,17 @@ class IcoOngoingItem extends StatelessWidget {
   }
 
   Widget _buildCard({BuildContext context, Widget child}) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Color(0xFF1B224E),
-          borderRadius: BorderRadius.all(Radius.circular(6.0)),
+    return GestureDetector(
+      onTap: onItemClicked ?? () {},
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color(0xFF1B224E),
+            borderRadius: BorderRadius.all(Radius.circular(6.0)),
+          ),
+          child: child,
         ),
-        child: child,
       ),
     );
   }
@@ -192,7 +205,7 @@ class IcoOngoingItem extends StatelessWidget {
                 iconSize: 20.0,
                 color:
                     alertAdded ? Styles.cnm_orange_300 : Styles.cnm_white_40pa,
-                onPressed: () {},
+                onPressed: onAlertClicked ?? () {},
               ),
             ),
           ),
@@ -209,7 +222,7 @@ class IcoOngoingItem extends StatelessWidget {
                 color: favoriteAdded
                     ? Styles.cnm_orange_300
                     : Styles.cnm_white_40pa,
-                onPressed: () {},
+                onPressed: onFavoriteClicked ?? () {},
               ),
             ),
           ),

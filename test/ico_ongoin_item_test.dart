@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/ico_ongoing_item.dart';
 import 'package:flutter_app/styles.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import 'test_helper.dart';
 
@@ -107,5 +108,45 @@ void main() {
       find.byType(IcoOngoingItem),
       matchesGoldenFile('golden/IcoOngoingItem_State.png'),
     );
+  }));
+
+  testWidgets('click_test', mockTester((WidgetTester tester) async {
+    var itemClickedHandler = new MockCallbackHandler();
+    var alertClickedHandler = new MockCallbackHandler();
+    var favoriteClickedHandler = new MockCallbackHandler();
+
+    const int idx = 100;
+    var item = {
+      "name": "KimeraKimeraKimeraKimera",
+      "symbol": "KIMERAKIMERAKIMERA",
+      "category": "Business Services & Consulting",
+      "score": "4.7",
+      "favorite_added": true,
+      "alert_added": true,
+      "onItemClicked": () {
+        itemClickedHandler.onClicked();
+      },
+      "onAlertClicked": () {
+        alertClickedHandler.onClicked();
+      },
+      "onFavoriteClicked": () {
+        favoriteClickedHandler.onClicked();
+      }
+    };
+
+    await tester.pumpWidget(
+      wrap(
+        IcoOngoingItem.forTest(item, idx),
+      ),
+    );
+
+    await tester.tap(find.byKey(Key("add_alert")));
+    verify(alertClickedHandler.onClicked());
+
+    await tester.tap(find.byKey(Key("add_favorite")));
+    verify(favoriteClickedHandler.onClicked());
+
+    await tester.tap(find.byType(IcoOngoingItem));
+    verify(itemClickedHandler.onClicked());
   }));
 }
