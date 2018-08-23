@@ -4,42 +4,13 @@
 // find child widgets in the widget tree, read text, and verify that the values of widget properties
 // are correct.
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/ico_watchlist_item.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
-import 'mock_http_client.dart';
-
-WidgetTesterCallback mockTester(WidgetTesterCallback callback) {
-  return (WidgetTester tester) async {
-    await HttpOverrides.runZoned(() async {
-      callback(tester);
-    }, createHttpClient: createMockImageHttpClient);
-  };
-}
-
-Widget _wrap(Widget widget) {
-  return MaterialApp(
-    title: 'Flutter Demo',
-    theme: new ThemeData(
-      primarySwatch: Colors.blue,
-    ),
-    home: Scaffold(
-      body: RepaintBoundary(
-        key: Key("golden"),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 360.0),
-            child: widget,
-          ),
-        ),
-      ),
-    ),
-  );
-}
+import 'test_helper.dart';
 
 void main() {
   group("basic", () {
@@ -49,7 +20,7 @@ void main() {
       var stage = IcoStage.PreSale;
       var startTs = DateTime(2025, 5, 20).millisecondsSinceEpoch;
 
-      var widget = _wrap(
+      var widget = wrap(
         IcoWatchListItem.sample(
           name: name,
           symbol: symbol,
@@ -90,7 +61,7 @@ void main() {
       var stage = IcoStage.PreSale;
       var startTs = DateTime(2017, 5, 20).millisecondsSinceEpoch;
 
-      var widget = _wrap(
+      var widget = wrap(
         IcoWatchListItem.sample(
           name: name,
           symbol: symbol,
@@ -111,6 +82,28 @@ void main() {
         find.byKey(Key("golden")),
         matchesGoldenFile('golden/ico_watchlist_item_started.png'),
       );
+    }));
+
+    testWidgets('tap_menu', mockTester((WidgetTester tester) async {
+      var name = "My Very LongNameCoin";
+      var symbol = "LNC";
+      var stage = IcoStage.PreSale;
+      var startTs = DateTime(2017, 5, 20).millisecondsSinceEpoch;
+
+      var clickedHandler = new MockCallbackHandler();
+
+      var widget = wrap(
+        IcoWatchListItem.sample(
+          name: name,
+          symbol: symbol,
+          stage: stage,
+          startTs: startTs,
+          onMenuClicked: clickedHandler.onClicked,
+        ),
+      );
+
+      await tester.pumpWidget(widget);
+      verify(clickedHandler.onClicked);
     }));
   }, tags: ["basic"]);
 }

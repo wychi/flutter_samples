@@ -15,6 +15,7 @@ class IcoWatchListItem extends StatelessWidget {
   final String iconUrl;
   final IcoStage stage;
   final DateTime startTs;
+  final VoidCallback onMenuClicked;
 
   IcoWatchListItem({
     this.name,
@@ -22,6 +23,7 @@ class IcoWatchListItem extends StatelessWidget {
     this.iconUrl,
     this.stage,
     int startTs,
+    this.onMenuClicked,
     this.forDesign = false,
   }) : startTs = DateTime.fromMillisecondsSinceEpoch(startTs);
 
@@ -30,7 +32,8 @@ class IcoWatchListItem extends StatelessWidget {
   }
 
   @visibleForTesting
-  factory IcoWatchListItem.sample({name, symbol, stage, startTs}) {
+  factory IcoWatchListItem.sample(
+      {name, symbol, stage, startTs, onMenuClicked}) {
     return new IcoWatchListItem(
       name: name ?? "Ankr Network",
       symbol: symbol ?? "ANKR",
@@ -38,13 +41,17 @@ class IcoWatchListItem extends StatelessWidget {
       stage: stage ?? IcoStage.PreSale,
       startTs: startTs ??
           DateTime.now().add(Duration(days: 1000)).millisecondsSinceEpoch,
+      onMenuClicked: onMenuClicked,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return CardWidget(
-      onMenuClicked: () {},
+      onMenuClicked: onMenuClicked ??
+          () {
+            print("onMenuClicked is not given. use empty function");
+          },
       child: buildBody(),
     );
   }
