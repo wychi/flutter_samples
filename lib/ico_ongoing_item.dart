@@ -78,69 +78,73 @@ class IcoOngoingItem extends StatelessWidget {
       context: context,
       child: Stack(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 8.0,
-              ),
-              _forDesignVisibility(
-                child: Text("$idx", style: Styles.text_xsmall),
-              ),
-              SizedBox(
-                width: 13.5,
-              ),
-              buildRoundImage(IMAGE_URL),
-              SizedBox(
-                width: 12.0,
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Flexible(
-                          child: _forDesignVisibility(
-                            child: Text(
-                              name,
-                              maxLines: 1,
-                              softWrap: false,
-                              overflow: TextOverflow.fade,
-                              style: Styles.text_large_bold
-                                  .copyWith(color: Styles.cnm_white),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 12.0,
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Styles.cnm_white_10pa,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(2.0)),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 3.0, horizontal: 4.0),
-                            child: Text(
-                              symbol,
-                              style: Styles.text_xxsmall
-                                  .copyWith(color: Styles.cnm_white_60pa),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(category, style: Styles.text_xsmall),
-                  ],
+          Container(
+            height: 88.0,
+            child: Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 8.0,
                 ),
-              ),
-              SizedBox(
-                width: 84.0,
-              )
-            ],
+                _forDesignVisibility(
+                  child: Text("$idx", style: Styles.text_xsmall),
+                ),
+                SizedBox(
+                  width: 13.5,
+                ),
+                buildRoundImage(IMAGE_URL),
+                SizedBox(
+                  width: 12.0,
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Flexible(
+                            child: _forDesignVisibility(
+                              child: Text(
+                                name,
+                                maxLines: 1,
+                                softWrap: false,
+                                overflow: TextOverflow.fade,
+                                style: Styles.text_large_bold
+                                    .copyWith(color: Styles.cnm_white),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 12.0,
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Styles.cnm_white_10pa,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(2.0)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 3.0, horizontal: 4.0),
+                              child: Text(
+                                symbol,
+                                style: Styles.text_xxsmall
+                                    .copyWith(color: Styles.cnm_white_60pa),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(category, style: Styles.text_xsmall),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 84.0,
+                )
+              ],
+            ),
           ),
           Positioned(
             right: 44.0,
