@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/ico_watchlist_item.dart';
+import 'package:flutter_app/ico_ongoing_item.dart';
 
 void main() => runApp(new MyApp());
 
@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: new Text(widget.title),
       ),
-      body: IcoWatchListItem.sample(),
+      body: IcoOngoingItem.forTest(),
       floatingActionButton: new FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
