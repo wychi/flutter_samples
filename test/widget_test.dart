@@ -77,6 +77,11 @@ void main() {
       expect(hasDateText, true);
 
       expect(find.text('opens in'), findsOneWidget);
+
+      await expectLater(
+        find.byKey(Key("golden")),
+        matchesGoldenFile('golden/ico_watchlist_item_not_started.png'),
+      );
     }));
 
     testWidgets('normal', mockTester((WidgetTester tester) async {
@@ -101,49 +106,11 @@ void main() {
       expect(find.text(symbol), findsOneWidget);
       expect(find.text('Presale'), findsOneWidget);
       expect(find.text('Opened'), findsOneWidget);
+
+      await expectLater(
+        find.byKey(Key("golden")),
+        matchesGoldenFile('golden/ico_watchlist_item_started.png'),
+      );
     }));
   }, tags: ["basic"]);
-
-  testWidgets('gold-NotStarted', mockTester((WidgetTester tester) async {
-    var name = "Not Started Coin Not Started Coin";
-    var symbol = "LNC";
-    var stage = IcoStage.PreSale;
-    var startTs = DateTime(2025, 5, 20).millisecondsSinceEpoch;
-
-    var widget = _wrap(
-      IcoWatchListItem.sample(
-        name: name,
-        symbol: symbol,
-        stage: stage,
-        startTs: startTs,
-      ),
-    );
-
-    await tester.pumpWidget(widget);
-    await expectLater(
-      find.byKey(Key("golden")),
-      matchesGoldenFile('golden/ico_watchlist_item_not_started.png'),
-    );
-  }));
-
-  testWidgets('gold-Started', mockTester((WidgetTester tester) async {
-    var name = "My Very LongNameCoin";
-    var symbol = "LNC";
-    var stage = IcoStage.PreSale;
-    var startTs = DateTime(2017, 5, 20).millisecondsSinceEpoch;
-    var widget = _wrap(
-      IcoWatchListItem.sample(
-        name: name,
-        symbol: symbol,
-        stage: stage,
-        startTs: startTs,
-      ),
-    );
-
-    await tester.pumpWidget(widget);
-    await expectLater(
-      find.byKey(Key("golden")),
-      matchesGoldenFile('golden/ico_watchlist_item_started.png'),
-    );
-  }));
 }
