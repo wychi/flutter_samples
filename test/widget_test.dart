@@ -42,65 +42,67 @@ Widget _wrap(Widget widget) {
 }
 
 void main() {
-  testWidgets('small-NotStarted', mockTester((WidgetTester tester) async {
-    var name = "Not Started Coin Not Started Coin";
-    var symbol = "LNC";
-    var stage = IcoStage.PreSale;
-    var startTs = DateTime(2025, 5, 20).millisecondsSinceEpoch;
+  group("basic", () {
+    testWidgets('long text', mockTester((WidgetTester tester) async {
+      var name = "Not Started Coin Not Started Coin";
+      var symbol = "LNC";
+      var stage = IcoStage.PreSale;
+      var startTs = DateTime(2025, 5, 20).millisecondsSinceEpoch;
 
-    var widget = _wrap(
-      IcoWatchListItem.sample(
-        name: name,
-        symbol: symbol,
-        stage: stage,
-        startTs: startTs,
-      ),
-    );
+      var widget = _wrap(
+        IcoWatchListItem.sample(
+          name: name,
+          symbol: symbol,
+          stage: stage,
+          startTs: startTs,
+        ),
+      );
 
-    await tester.pumpWidget(widget);
+      await tester.pumpWidget(widget);
 
-    expect(find.byType(Image), findsNWidgets(1));
-    expect(find.byIcon(Icons.more_vert), findsOneWidget);
-    expect(find.text(name), findsOneWidget);
-    expect(find.text(symbol), findsOneWidget);
-    expect(find.text('Presale'), findsOneWidget);
+      expect(find.byType(Image), findsNWidgets(1));
+      expect(find.byIcon(Icons.more_vert), findsOneWidget);
+      expect(find.text(name), findsOneWidget);
+      expect(find.text(symbol), findsOneWidget);
+      expect(find.text('Presale'), findsOneWidget);
 
-    // expect(find.text('2025-05-20'), findsOneWidget);
-    var hasDateText = find.byType(Text).evaluate().where((element) {
-      var widget = element.widget;
-      if (widget is Text) {
-        return widget.data.contains("2025-05-20");
-      }
-      return false;
-    }).isNotEmpty;
-    expect(hasDateText, true);
+      // expect(find.text('2025-05-20'), findsOneWidget);
+      var hasDateText = find.byType(Text).evaluate().where((element) {
+        var widget = element.widget;
+        if (widget is Text) {
+          return widget.data.contains("2025-05-20");
+        }
+        return false;
+      }).isNotEmpty;
+      expect(hasDateText, true);
 
-    expect(find.text('opens in'), findsOneWidget);
-  }));
+      expect(find.text('opens in'), findsOneWidget);
+    }));
 
-  testWidgets('small-Started', mockTester((WidgetTester tester) async {
-    var name = "My Very LongNameCoin";
-    var symbol = "LNC";
-    var stage = IcoStage.PreSale;
-    var startTs = DateTime(2017, 5, 20).millisecondsSinceEpoch;
+    testWidgets('normal', mockTester((WidgetTester tester) async {
+      var name = "My Very LongNameCoin";
+      var symbol = "LNC";
+      var stage = IcoStage.PreSale;
+      var startTs = DateTime(2017, 5, 20).millisecondsSinceEpoch;
 
-    var widget = _wrap(
-      IcoWatchListItem.sample(
-        name: name,
-        symbol: symbol,
-        stage: stage,
-        startTs: startTs,
-      ),
-    );
+      var widget = _wrap(
+        IcoWatchListItem.sample(
+          name: name,
+          symbol: symbol,
+          stage: stage,
+          startTs: startTs,
+        ),
+      );
 
-    await tester.pumpWidget(widget);
+      await tester.pumpWidget(widget);
 
-    // Verify that our counter starts at 0.
-    expect(find.text(name), findsOneWidget);
-    expect(find.text(symbol), findsOneWidget);
-    expect(find.text('Presale'), findsOneWidget);
-    expect(find.text('Opened'), findsOneWidget);
-  }));
+      // Verify that our counter starts at 0.
+      expect(find.text(name), findsOneWidget);
+      expect(find.text(symbol), findsOneWidget);
+      expect(find.text('Presale'), findsOneWidget);
+      expect(find.text('Opened'), findsOneWidget);
+    }));
+  }, tags: ["basic"]);
 
   testWidgets('gold-NotStarted', mockTester((WidgetTester tester) async {
     var name = "Not Started Coin Not Started Coin";
