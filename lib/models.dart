@@ -6,7 +6,7 @@ class IcoItemViewModel {
   String get name => mapData['name'];
   String get symbol => mapData['symbol'];
   String get stage => mapData['stage'];
-  String get startTs => mapData['startTs'];
+  DateTime get startTs => mapData['startTs'];
   Function get onItemClicked => mapData['onItemClicked'];
   Function get onMenuClicked => mapData['onMenuClicked'];
 }

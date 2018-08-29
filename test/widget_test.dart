@@ -18,8 +18,8 @@ void main() {
     testWidgets('long text', mockTester((WidgetTester tester) async {
       var name = "Not Started Coin Not Started Coin";
       var symbol = "LNC";
-      var stage = IcoStage.PreSale;
-      var startTs = DateTime(2025, 5, 20).millisecondsSinceEpoch;
+      var stage = "PreSale";
+      var startTs = DateTime(2025, 5, 20);
 
       var mapData = <String, dynamic>{
         "name": name,
@@ -61,8 +61,8 @@ void main() {
     testWidgets('normal', mockTester((WidgetTester tester) async {
       var name = "My Very LongNameCoin";
       var symbol = "LNC";
-      var stage = IcoStage.PreSale;
-      var startTs = DateTime(2017, 5, 20).millisecondsSinceEpoch;
+      var stage = "PreSale";
+      var startTs = DateTime(2017, 5, 20);
 
       var mapData = <String, dynamic>{
         "name": name,
@@ -92,8 +92,8 @@ void main() {
     testWidgets('tap_menu', mockTester((WidgetTester tester) async {
       var name = "My Very LongNameCoin";
       var symbol = "LNC";
-      var stage = IcoStage.PreSale;
-      var startTs = DateTime(2017, 5, 20).millisecondsSinceEpoch;
+      var stage = "PreSale";
+      var startTs = DateTime(2017, 5, 20);
       var clickedHandler = new MockCallbackHandler();
 
       var mapData = <String, dynamic>{
@@ -108,7 +108,9 @@ void main() {
       );
 
       await tester.pumpWidget(widget);
-      verify(clickedHandler.onClicked);
+      await tester.tap(find.byKey(Key("menu")).first);
+
+      verify(clickedHandler.onClicked());
     }));
   }, tags: ["basic"]);
 }

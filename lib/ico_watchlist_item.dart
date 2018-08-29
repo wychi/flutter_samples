@@ -17,6 +17,7 @@ class IcoWatchListItem extends StatelessWidget {
   final IcoStage stage;
   final DateTime startTs;
   final VoidCallback onMenuClicked;
+  final VoidCallback onItemClicked;
 
   IcoWatchListItem({
     this.name,
@@ -25,6 +26,7 @@ class IcoWatchListItem extends StatelessWidget {
     this.stage,
     int startTs,
     this.onMenuClicked,
+    this.onItemClicked,
     this.forDesign = false,
   }) : startTs = DateTime.fromMillisecondsSinceEpoch(startTs);
 
@@ -38,21 +40,31 @@ class IcoWatchListItem extends StatelessWidget {
       name: item.name ?? "Ankr Network",
       symbol: item.symbol ?? "ANKR",
       iconUrl: IMAGE_URL,
-      stage: item.stage ?? IcoStage.PreSale,
-      startTs: item.startTs ??
+      stage: item.stage == "PreSale"
+          ? IcoStage.PreSale
+          : IcoStage.PreSale_Whitelist,
+      startTs: item.startTs.millisecondsSinceEpoch ??
           DateTime.now().add(Duration(days: 1000)).millisecondsSinceEpoch,
       onMenuClicked: item.onMenuClicked,
+      onItemClicked: item.onItemClicked,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return CardWidget(
-      onMenuClicked: onMenuClicked ??
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onItemClicked ??
           () {
-            print("onMenuClicked is not given. use empty function");
+            print("onItemClicked is not given. use empty function");
           },
-      child: buildBody(),
+      child: CardWidget(
+        onMenuClicked: onMenuClicked ??
+            () {
+              print("onMenuClicked is not given. use empty function");
+            },
+        child: buildBody(),
+      ),
     );
   }
 
