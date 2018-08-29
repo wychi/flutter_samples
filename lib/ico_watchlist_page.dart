@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ico_watchlist_item.dart';
@@ -20,7 +22,9 @@ class BloC {
   Stream<BlocState> get stream => _stateController.stream;
 
   void initState() {
-    _stateController = new StreamController(onListen: () {});
+    _stateController = new StreamController(onListen: () {
+      requestData();
+    });
   }
 
   void dispose() {
@@ -29,27 +33,44 @@ class BloC {
   }
 
   IcoItemViewModel getItem(int idx) {
-    var name = "$idx My Very LongNameCoin";
-    var symbol = "$idx";
-    var stage = "PreSale";
-    var startTs =
-        DateTime.now().add(Duration(days: idx * (idx.isEven ? -1 : 1)));
-
-    var mapData = <String, dynamic>{
-      "name": name,
-      "symbol": symbol,
-      "stage": stage,
-      "startTs": startTs,
-      "onItemClicked": () => print("onItemClicked"),
-      "onMenuClicked": () => print("onMenuClicked")
-    };
-    return new IcoItemViewModel(mapData);
+    print('getItem $idx');
+    return new IcoItemViewModel(_data[idx]);
   }
 
-  int getItemCount() => 10;
+  int getItemCount() => _data?.length ?? 0;
 
-  void requestData() {
+  List<Map<String, dynamic>> _data;
+
+  Future<Null> requestData() async {
     state = BlocState.LOADING;
+
+    HttpClient client = new HttpClient();
+    try {
+      var request = await client
+          .getUrl(Uri.parse('https://api.ratingtoken.io/token/ICORankList'));
+
+      var response = await request.close();
+      var responseBody = await response.transform(utf8.decoder).join();
+
+      var list = json.decode(responseBody)['data']['list'] as List<dynamic>;
+
+      var stage = "PreSale";
+      var startTs = DateTime.now();
+
+      _data = list.take(10).cast<Map<String, dynamic>>().map((mapData) {
+        return {
+          "name": mapData['currency'],
+          "symbol": mapData['symbol'],
+          "stage": stage,
+          "startTs": startTs,
+        };
+      }).toList(growable: false);
+
+      state = BlocState.DATA_READY;
+    } catch (error) {
+      print(error);
+      state = BlocState.ERROR;
+    }
   }
 }
 
