@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/card_widget.dart';
+import 'package:flutter_app/models.dart';
 import 'package:flutter_app/styles.dart';
 import 'package:intl/intl.dart';
 
@@ -32,16 +33,15 @@ class IcoWatchListItem extends StatelessWidget {
   }
 
   @visibleForTesting
-  factory IcoWatchListItem.sample(
-      {name, symbol, stage, startTs, onMenuClicked}) {
+  factory IcoWatchListItem.sample(IcoItemViewModel item) {
     return new IcoWatchListItem(
-      name: name ?? "Ankr Network",
-      symbol: symbol ?? "ANKR",
+      name: item.name ?? "Ankr Network",
+      symbol: item.symbol ?? "ANKR",
       iconUrl: IMAGE_URL,
-      stage: stage ?? IcoStage.PreSale,
-      startTs: startTs ??
+      stage: item.stage ?? IcoStage.PreSale,
+      startTs: item.startTs ??
           DateTime.now().add(Duration(days: 1000)).millisecondsSinceEpoch,
-      onMenuClicked: onMenuClicked,
+      onMenuClicked: item.onMenuClicked,
     );
   }
 

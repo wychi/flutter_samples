@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/ico_watchlist_item.dart';
+import 'package:flutter_app/models.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -20,13 +21,15 @@ void main() {
       var stage = IcoStage.PreSale;
       var startTs = DateTime(2025, 5, 20).millisecondsSinceEpoch;
 
+      var mapData = <String, dynamic>{
+        "name": name,
+        "symbol": symbol,
+        "stage": stage,
+        "startTs": startTs,
+      };
+
       var widget = wrap(
-        IcoWatchListItem.sample(
-          name: name,
-          symbol: symbol,
-          stage: stage,
-          startTs: startTs,
-        ),
+        IcoWatchListItem.sample(new IcoItemViewModel(mapData)),
       );
 
       await tester.pumpWidget(widget);
@@ -61,13 +64,15 @@ void main() {
       var stage = IcoStage.PreSale;
       var startTs = DateTime(2017, 5, 20).millisecondsSinceEpoch;
 
+      var mapData = <String, dynamic>{
+        "name": name,
+        "symbol": symbol,
+        "stage": stage,
+        "startTs": startTs,
+      };
+
       var widget = wrap(
-        IcoWatchListItem.sample(
-          name: name,
-          symbol: symbol,
-          stage: stage,
-          startTs: startTs,
-        ),
+        IcoWatchListItem.sample(new IcoItemViewModel(mapData)),
       );
 
       await tester.pumpWidget(widget);
@@ -89,17 +94,17 @@ void main() {
       var symbol = "LNC";
       var stage = IcoStage.PreSale;
       var startTs = DateTime(2017, 5, 20).millisecondsSinceEpoch;
-
       var clickedHandler = new MockCallbackHandler();
 
+      var mapData = <String, dynamic>{
+        "name": name,
+        "symbol": symbol,
+        "stage": stage,
+        "startTs": startTs,
+        "onMenuClicked": clickedHandler.onClicked,
+      };
       var widget = wrap(
-        IcoWatchListItem.sample(
-          name: name,
-          symbol: symbol,
-          stage: stage,
-          startTs: startTs,
-          onMenuClicked: clickedHandler.onClicked,
-        ),
+        IcoWatchListItem.sample(new IcoItemViewModel(mapData)),
       );
 
       await tester.pumpWidget(widget);

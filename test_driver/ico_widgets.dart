@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ico_ongoing_item.dart';
 import 'package:flutter_app/ico_watchlist_item.dart';
+import 'package:flutter_app/models.dart';
 import 'package:flutter_driver/driver_extension.dart';
 
 import 'my_test_app.dart';
@@ -21,7 +22,19 @@ void main() {
 }
 
 Widget _buildIcoWatchItem(BuildContext context) {
-  return IcoWatchListItem.sample();
+  var name = "Not Started Coin Not Started Coin";
+  var symbol = "LNC";
+  var stage = IcoStage.PreSale;
+  var startTs = DateTime(2025, 5, 20).millisecondsSinceEpoch;
+
+  var mapData = <String, dynamic>{
+    "name": name,
+    "symbol": symbol,
+    "stage": stage,
+    "startTs": startTs,
+  };
+
+  return IcoWatchListItem.sample(new IcoItemViewModel(mapData));
 }
 
 Widget _buildIcoOngoingItem(BuildContext context) {
