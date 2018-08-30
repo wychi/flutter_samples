@@ -126,6 +126,9 @@ class IcoWatchListItem extends StatelessWidget {
               ),
               child: Text(
                 symbol,
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.fade,
                 style: Styles.text_xxsmall.copyWith(color: Colors.white),
               ),
             ),
