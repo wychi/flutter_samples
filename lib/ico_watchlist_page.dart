@@ -9,7 +9,7 @@ import 'package:flutter_app/models.dart';
 import 'package:flutter_app/my_error_widget.dart';
 import 'package:rxdart/rxdart.dart';
 
-enum BlocState { START, NA, LOADING, ERROR, DATA_READY, LOAD_MORE }
+enum BlocState { START, NA, LOADING, ERROR, DATA_READY, DATA_EMPTY, LOAD_MORE }
 
 class Api {
   HttpClient client = new HttpClient();
@@ -21,6 +21,7 @@ class Api {
   }
 
   Future<List<Map<String, dynamic>>> requestData() async {
+    print("Api requestData");
     try {
       var request = await client
           .getUrl(Uri.parse('https://api.ratingtoken.io/token/ICORankList'));
@@ -55,11 +56,11 @@ class BloC {
   Api _api;
   List<Map<String, dynamic>> _data;
 
-  BloC();
+  BloC(Api api)
+      : assert(api != null),
+        _api = api;
 
-  void initState() {
-    _api ??= new Api();
-  }
+  void initState() {}
 
   void dispose() {}
 
@@ -75,10 +76,17 @@ class BloC {
     subject.listen((state) => _state = state);
 
     yield BlocState.START;
-    try {
-      _data = await _api.requestData();
 
-      yield BlocState.DATA_READY;
+    try {
+      yield BlocState.LOADING;
+      _data = await _api.requestData();
+      print(_data);
+
+      if (_data.isEmpty) {
+        yield BlocState.DATA_EMPTY;
+      } else {
+        yield BlocState.DATA_READY;
+      }
     } catch (error) {
       yield BlocState.ERROR;
     } finally {
@@ -134,7 +142,7 @@ class _IcoWatchlistPageState extends State<IcoWatchlistPage> {
   @override
   void initState() {
     super.initState();
-    _bloc = widget.mockBloc ?? new BloC();
+    _bloc = widget.mockBloc ?? new BloC(new Api());
     _bloc.initState();
   }
 
