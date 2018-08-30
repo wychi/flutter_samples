@@ -10,6 +10,43 @@ import 'package:flutter_app/my_error_widget.dart';
 
 enum BlocState { START, NA, LOADING, ERROR, DATA_READY, LOAD_MORE }
 
+class Api {
+  HttpClient client = new HttpClient();
+
+  static Api _sInstance;
+  Api._();
+  factory Api() {
+    return _sInstance ??= new Api._();
+  }
+
+  Future<List<Map<String, dynamic>>> requestData() async {
+    try {
+      var request = await client
+          .getUrl(Uri.parse('https://api.ratingtoken.io/token/ICORankList'));
+
+      var response = await request.close();
+      var responseBody = await response.transform(utf8.decoder).join();
+
+      var list = json.decode(responseBody)['data']['list'] as List<dynamic>;
+
+      var stage = "PreSale";
+      var startTs = DateTime.now();
+
+      return list.take(10).cast<Map<String, dynamic>>().map((mapData) {
+        return {
+          "name": mapData['currency'],
+          "symbol": mapData['symbol'],
+          "stage": stage,
+          "startTs": startTs,
+        };
+      }).toList(growable: false);
+    } catch (error) {
+      print(error);
+      throw error;
+    }
+  }
+}
+
 class BloC {
   BlocState _state = BlocState.START;
   get state => _state;
@@ -20,11 +57,14 @@ class BloC {
 
   StreamController<BlocState> _stateController;
   Stream<BlocState> get stream => _stateController.stream;
+  Api _api;
 
   void initState() {
     _stateController = new StreamController(onListen: () {
       requestData();
     });
+
+    _api ??= new Api();
   }
 
   void dispose() {
@@ -44,28 +84,8 @@ class BloC {
   Future<Null> requestData() async {
     state = BlocState.LOADING;
 
-    HttpClient client = new HttpClient();
     try {
-      var request = await client
-          .getUrl(Uri.parse('https://api.ratingtoken.io/token/ICORankList'));
-
-      var response = await request.close();
-      var responseBody = await response.transform(utf8.decoder).join();
-
-      var list = json.decode(responseBody)['data']['list'] as List<dynamic>;
-
-      var stage = "PreSale";
-      var startTs = DateTime.now();
-
-      _data = list.take(10).cast<Map<String, dynamic>>().map((mapData) {
-        return {
-          "name": mapData['currency'],
-          "symbol": mapData['symbol'],
-          "stage": stage,
-          "startTs": startTs,
-        };
-      }).toList(growable: false);
-
+      _data = await _api.requestData();
       state = BlocState.DATA_READY;
     } catch (error) {
       print(error);
