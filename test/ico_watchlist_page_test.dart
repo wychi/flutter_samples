@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ico_watchlist_item.dart';
 import 'package:flutter_app/ico_watchlist_page.dart';
@@ -8,6 +6,7 @@ import 'package:flutter_app/models.dart';
 import 'package:flutter_app/my_error_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'test_helper.dart';
 
@@ -81,20 +80,16 @@ void main() {
     item.mapData['onItemClicked'] = c0.onClicked;
     item.mapData['onMenuClicked'] = menuClicker.onClicked;
 
-    var controller = new StreamController<BlocState>();
+    final subject = new PublishSubject<BlocState>();
+    subject.add(BlocState.START);
 
     var mockBloc = new MockBloc();
-    when(mockBloc.state).thenReturn(BlocState.START);
-    when(mockBloc.stream).thenAnswer((_) => controller.stream);
     verifyNever(mockBloc.getItemCount());
     verifyNever(mockBloc.getItem(any));
 
-//    when(mockBloc.requestData()).thenAnswer((_) {
-//      when(mockBloc.getItemCount()).thenReturn(itemCount);
-//      when(mockBloc.getItem(any)).thenReturn(item);
-//      when(mockBloc.state).thenReturn(BlocState.LOADING);
-//      controller.add(mockBloc.state);
-//    });
+    when(mockBloc.requestData()).thenAnswer((_) {
+      return subject;
+    });
 
     {
       await tester.pumpWidget(
@@ -107,8 +102,7 @@ void main() {
     }
 
     {
-      when(mockBloc.state).thenReturn(BlocState.LOADING);
-      controller.add(mockBloc.state);
+      subject.add(BlocState.LOADING);
       await tester.pumpAndSettle();
 
       expect(find.byType(LoadingWidget), findsOneWidget);
@@ -117,26 +111,21 @@ void main() {
     {
       when(mockBloc.getItemCount()).thenReturn(itemCount);
       when(mockBloc.getItem(any)).thenReturn(item);
-      when(mockBloc.state).thenReturn(BlocState.DATA_READY);
-      controller.add(mockBloc.state);
+      subject.add(BlocState.DATA_READY);
       await tester.pumpAndSettle();
 
-      expect(mockBloc.state, BlocState.DATA_READY);
       verify(mockBloc.getItemCount());
       verify(mockBloc.getItem(any));
       expect(find.byType(IcoWatchListItem), findsWidgets);
     }
     {
-      when(mockBloc.state).thenReturn(BlocState.ERROR);
-      controller.add(mockBloc.state);
+      subject.add(BlocState.ERROR);
       await tester.pumpAndSettle();
-
-      expect(mockBloc.state, BlocState.ERROR);
 
       expect(find.byType(MyErrorWidget), findsOneWidget);
       expect(find.byType(IcoWatchListItem), findsNothing);
     }
 
-    controller.close();
+    subject.close();
   }));
 }

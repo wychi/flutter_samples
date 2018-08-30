@@ -7,6 +7,7 @@ import 'package:flutter_app/ico_watchlist_item.dart';
 import 'package:flutter_app/loading_widget.dart';
 import 'package:flutter_app/models.dart';
 import 'package:flutter_app/my_error_widget.dart';
+import 'package:rxdart/rxdart.dart';
 
 enum BlocState { START, NA, LOADING, ERROR, DATA_READY, LOAD_MORE }
 
@@ -50,27 +51,17 @@ class Api {
 class BloC {
   BlocState _state = BlocState.START;
   get state => _state;
-  set state(value) {
-    _state = value;
-    _stateController.add(_state);
-  }
 
-  StreamController<BlocState> _stateController;
-  Stream<BlocState> get stream => _stateController.stream;
   Api _api;
+  List<Map<String, dynamic>> _data;
+
+  BloC();
 
   void initState() {
-    _stateController = new StreamController(onListen: () {
-      requestData();
-    });
-
     _api ??= new Api();
   }
 
-  void dispose() {
-    _stateController?.close();
-    _stateController = null;
-  }
+  void dispose() {}
 
   IcoItemViewModel getItem(int idx) {
     print('getItem $idx');
@@ -79,17 +70,19 @@ class BloC {
 
   int getItemCount() => _data?.length ?? 0;
 
-  List<Map<String, dynamic>> _data;
+  Stream<BlocState> requestData() async* {
+    final subject = new PublishSubject<BlocState>();
+    subject.listen((state) => _state = state);
 
-  Future<Null> requestData() async {
-    state = BlocState.LOADING;
-
+    yield BlocState.START;
     try {
       _data = await _api.requestData();
-      state = BlocState.DATA_READY;
+
+      yield BlocState.DATA_READY;
     } catch (error) {
-      print(error);
-      state = BlocState.ERROR;
+      yield BlocState.ERROR;
+    } finally {
+      subject.close();
     }
   }
 }
@@ -113,8 +106,7 @@ class _IcoWatchlistPageState extends State<IcoWatchlistPage> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      initialData: _bloc.state,
-      stream: _bloc.stream,
+      stream: _bloc.requestData(),
       builder: (context, snapshot) {
         print("_IcoWatchlistPageState snapshot= $snapshot");
         var state = snapshot.data;
