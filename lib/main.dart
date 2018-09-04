@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/ico_ongoing_item.dart';
-import 'package:flutter_app/ico_watchlist_page.dart';
+import 'package:flutter_app/ico/ico_ongoing_item.dart';
+import 'package:flutter_app/ico/ico_watchlist_page.dart';
 
 void main() => runApp(new MyApp());
 

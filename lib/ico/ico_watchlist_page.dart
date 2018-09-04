@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ico/api.dart';
 import 'package:flutter_app/ico/ico_bloc.dart';
-import 'package:flutter_app/ico_watchlist_item.dart';
+import 'package:flutter_app/ico/ico_watchlist_item.dart';
+import 'package:flutter_app/ico/models.dart';
 import 'package:flutter_app/loading_widget.dart';
-import 'package:flutter_app/models.dart';
 import 'package:flutter_app/my_error_widget.dart';
 
 class IcoWatchlistPage extends StatefulWidget {
@@ -26,6 +26,7 @@ class _IcoWatchlistPageState extends State<IcoWatchlistPage> {
   Widget build(BuildContext context) {
     _bloc.requestData();
     return StreamBuilder(
+      initialData: _bloc.state,
       stream: _bloc.stateStream,
       builder: (context, snapshot) {
         print("_IcoWatchlistPageState snapshot= $snapshot");

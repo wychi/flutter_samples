@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/card_widget.dart';
-import 'package:flutter_app/models.dart';
+import 'package:flutter_app/ico/models.dart';
 import 'package:flutter_app/styles.dart';
 import 'package:intl/intl.dart';
 

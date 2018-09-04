@@ -6,8 +6,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_app/ico_watchlist_item.dart';
-import 'package:flutter_app/models.dart';
+import 'package:flutter_app/ico/ico_watchlist_item.dart';
+import 'package:flutter_app/ico/models.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 

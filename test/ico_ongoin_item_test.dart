@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/ico_ongoing_item.dart';
+import 'package:flutter_app/ico/ico_ongoing_item.dart';
 import 'package:flutter_app/styles.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

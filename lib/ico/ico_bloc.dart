@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_app/ico/api.dart';
-import 'package:flutter_app/models.dart';
+import 'package:flutter_app/ico/models.dart';
 import 'package:rxdart/rxdart.dart';
 
 enum BlocState { START, NA, LOADING, ERROR, DATA_READY, DATA_EMPTY, LOAD_MORE }

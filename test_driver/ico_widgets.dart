@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/ico_ongoing_item.dart';
-import 'package:flutter_app/ico_watchlist_item.dart';
-import 'package:flutter_app/models.dart';
+import 'package:flutter_app/ico/ico_ongoing_item.dart';
+import 'package:flutter_app/ico/ico_watchlist_item.dart';
+import 'package:flutter_app/ico/models.dart';
 import 'package:flutter_driver/driver_extension.dart';
 
 import 'my_test_app.dart';
