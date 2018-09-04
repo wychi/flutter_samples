@@ -1,37 +1,26 @@
-import 'package:flutter_app/ico_watchlist_page.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'dart:async';
+
+import 'package:flutter_app/ico/api.dart';
+import 'package:flutter_app/ico/ico_bloc.dart';
 import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
 
 class MockApi extends Mock implements Api {}
 
 void main() {
-  var kData = new List<Map<String, dynamic>>.generate(10, (idx) {
-    var name = "$idx My Very LongNameCoin";
-    var symbol = "$idx";
-    var stage = "PreSale";
-    var startTs =
-        DateTime.now().add(Duration(days: idx * (idx.isEven ? -1 : 1)));
-
-    var mapData = <String, dynamic>{
-      "name": name,
-      "symbol": symbol,
-      "stage": stage,
-      "startTs": startTs,
-    };
-    return mapData;
-  });
-
   group("bloc", () {
     test('normal', () {
       final api = MockApi();
       final bloc = BloC(api);
 
       when(api.requestData()).thenAnswer((_) {
-        return Future.value(kData);
+        return Future.value([{}]);
       });
 
+      scheduleMicrotask(() => bloc.requestData());
+
       expect(
-        bloc.requestData(),
+        bloc.stateStream,
         emitsInOrder(
             [BlocState.START, BlocState.LOADING, BlocState.DATA_READY]),
       );
@@ -45,8 +34,9 @@ void main() {
         return Future.value([]);
       });
 
+      scheduleMicrotask(() => bloc.requestData());
       expect(
-        bloc.requestData(),
+        bloc.stateStream,
         emitsInOrder(
             [BlocState.START, BlocState.LOADING, BlocState.DATA_EMPTY]),
       );
@@ -58,8 +48,9 @@ void main() {
 
       when(api.requestData()).thenThrow("error");
 
+      scheduleMicrotask(() => bloc.requestData());
       expect(
-        bloc.requestData(),
+        bloc.stateStream,
         emitsInOrder([BlocState.START, BlocState.LOADING, BlocState.ERROR]),
       );
     });

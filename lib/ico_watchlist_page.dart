@@ -1,99 +1,10 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_app/ico/api.dart';
+import 'package:flutter_app/ico/ico_bloc.dart';
 import 'package:flutter_app/ico_watchlist_item.dart';
 import 'package:flutter_app/loading_widget.dart';
 import 'package:flutter_app/models.dart';
 import 'package:flutter_app/my_error_widget.dart';
-import 'package:rxdart/rxdart.dart';
-
-enum BlocState { START, NA, LOADING, ERROR, DATA_READY, DATA_EMPTY, LOAD_MORE }
-
-class Api {
-  HttpClient client = new HttpClient();
-
-  static Api _sInstance;
-  Api._();
-  factory Api() {
-    return _sInstance ??= new Api._();
-  }
-
-  Future<List<Map<String, dynamic>>> requestData() async {
-    print("Api requestData");
-    try {
-      var request = await client
-          .getUrl(Uri.parse('https://api.ratingtoken.io/token/ICORankList'));
-
-      var response = await request.close();
-      var responseBody = await response.transform(utf8.decoder).join();
-
-      var list = json.decode(responseBody)['data']['list'] as List<dynamic>;
-
-      var stage = "PreSale";
-      var startTs = DateTime.now();
-
-      return list.take(10).cast<Map<String, dynamic>>().map((mapData) {
-        return {
-          "name": mapData['currency'],
-          "symbol": mapData['symbol'],
-          "stage": stage,
-          "startTs": startTs,
-        };
-      }).toList(growable: false);
-    } catch (error) {
-      print(error);
-      throw error;
-    }
-  }
-}
-
-class BloC {
-  BlocState _state = BlocState.START;
-  get state => _state;
-
-  Api _api;
-  List<Map<String, dynamic>> _data;
-
-  BloC(Api api)
-      : assert(api != null),
-        _api = api;
-
-  void initState() {}
-
-  void dispose() {}
-
-  IcoItemViewModel getItem(int idx) {
-    print('getItem $idx');
-    return new IcoItemViewModel(_data[idx]);
-  }
-
-  int getItemCount() => _data?.length ?? 0;
-
-  Stream<BlocState> requestData() async* {
-    final subject = new PublishSubject<BlocState>();
-    subject.listen((state) => _state = state);
-
-    yield BlocState.START;
-
-    try {
-      yield BlocState.LOADING;
-      _data = await _api.requestData();
-      print(_data);
-
-      if (_data.isEmpty) {
-        yield BlocState.DATA_EMPTY;
-      } else {
-        yield BlocState.DATA_READY;
-      }
-    } catch (error) {
-      yield BlocState.ERROR;
-    } finally {
-      subject.close();
-    }
-  }
-}
 
 class IcoWatchlistPage extends StatefulWidget {
   final BloC mockBloc;
@@ -113,8 +24,9 @@ class _IcoWatchlistPageState extends State<IcoWatchlistPage> {
 
   @override
   Widget build(BuildContext context) {
+    _bloc.requestData();
     return StreamBuilder(
-      stream: _bloc.requestData(),
+      stream: _bloc.stateStream,
       builder: (context, snapshot) {
         print("_IcoWatchlistPageState snapshot= $snapshot");
         var state = snapshot.data;
