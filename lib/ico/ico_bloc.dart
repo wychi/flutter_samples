@@ -61,4 +61,8 @@ class BloC {
       yield BlocState.ERROR;
     }
   }
+
+  Future<void> refresh() async {
+    print("refresh");
+  }
 }

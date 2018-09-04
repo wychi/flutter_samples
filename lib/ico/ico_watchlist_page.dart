@@ -67,12 +67,15 @@ class _IcoWatchlistPageState extends State<IcoWatchlistPage> {
 
   Widget _buildListView(BuildContext context) {
     return Container(
-      child: ListView.builder(
-        itemCount: _bloc.getItemCount(),
-        itemBuilder: (context, idx) {
-          IcoItemViewModel viewModel = _bloc.getItem(idx);
-          return IcoWatchListItem.sample(viewModel);
-        },
+      child: RefreshIndicator(
+        onRefresh: _bloc.refresh,
+        child: ListView.builder(
+          itemCount: _bloc.getItemCount(),
+          itemBuilder: (context, idx) {
+            IcoItemViewModel viewModel = _bloc.getItem(idx);
+            return IcoWatchListItem.sample(viewModel);
+          },
+        ),
       ),
     );
   }

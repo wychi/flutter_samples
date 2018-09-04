@@ -148,4 +148,51 @@ void main() {
 
     subject.close();
   }));
+
+  testWidgets('refresh', mockTester((WidgetTester tester) async {
+    var itemCount = 10;
+    var itemIdx = 0;
+
+    var subject = new PublishSubject<BlocState>();
+    var mockBloc = new MockBloc();
+    {
+      when(mockBloc.stateStream).thenAnswer((_) {
+        return subject.startWith(BlocState.DATA_READY);
+      });
+      when(mockBloc.state).thenReturn(null);
+      when(mockBloc.getItemCount()).thenReturn(itemCount);
+      when(mockBloc.getItem(any)).thenReturn(kItems[itemIdx]);
+    }
+
+    {
+      await tester.pumpWidget(wrap(IcoWatchlistPage.forTest(mockBloc)));
+      await tester.pump();
+      expect(find.byType(IcoWatchListItem), findsWidgets);
+    }
+
+    {
+      itemCount = 1;
+      itemIdx = 1;
+      when(mockBloc.getItemCount()).thenReturn(itemCount);
+      when(mockBloc.getItem(any)).thenReturn(kItems[itemIdx]);
+
+      when(mockBloc.refresh()).thenAnswer((_) {
+        subject.add(BlocState.DATA_READY);
+        return Future.value(null);
+      });
+
+      await tester.drag(
+        find.byType(IcoWatchListItem).first,
+        const Offset(0.0, 200.0),
+      );
+      var frames = await tester.pumpAndSettle();
+      print("frames=$frames");
+
+      verify(mockBloc.refresh());
+      expect(find.text("1"), findsWidgets);
+      expect(find.byType(IcoWatchListItem), findsNWidgets(itemCount));
+    }
+
+    subject.close();
+  }));
 }
