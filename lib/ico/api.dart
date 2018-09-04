@@ -14,8 +14,13 @@ class Api {
   Future<List<Map<String, dynamic>>> requestData() async {
     print("Api requestData");
     try {
-      var request = await client
-          .getUrl(Uri.parse('https://api.ratingtoken.io/token/ICORankList'));
+      var qs = {
+        "page": "0",
+        "limit": "5",
+      };
+      var uri = Uri.parse('https://api.ratingtoken.io/token/ICORankList')
+          .replace(queryParameters: qs);
+      var request = await client.getUrl(uri);
 
       var response = await request.close();
       var responseBody = await response.transform(utf8.decoder).join();

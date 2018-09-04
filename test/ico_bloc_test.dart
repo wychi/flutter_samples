@@ -54,5 +54,46 @@ void main() {
         emitsInOrder([BlocState.START, BlocState.LOADING, BlocState.ERROR]),
       );
     });
+
+    test('refresh', () async {
+      final api = MockApi();
+      final bloc = BloC(api);
+
+      when(api.requestData()).thenAnswer((_) {
+        return Future.value([
+          {"id": "5"}
+        ]);
+      });
+
+      expect(
+        bloc.stateStream,
+        emitsInOrder(
+            [BlocState.START, BlocState.LOADING, BlocState.DATA_READY]),
+      );
+
+      bloc.requestData();
+      await bloc.stateStream.any((state) => state == BlocState.DATA_READY);
+
+      expect(bloc.getItemCount(), 1);
+      print("next ");
+
+      {
+        when(api.requestData()).thenAnswer((_) {
+          return Future.value([
+            {"id": "4"}
+          ]);
+        });
+        await bloc.refresh();
+        expect(bloc.getItemCount(), 2);
+      }
+
+      {
+        when(api.requestData()).thenAnswer((_) {
+          return Future.value([]);
+        });
+        await bloc.refresh();
+        expect(bloc.getItemCount(), 2);
+      }
+    });
   });
 }

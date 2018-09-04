@@ -14,7 +14,7 @@ class BloC {
   get state => _state;
 
   Api _api;
-  List<Map<String, dynamic>> _data;
+  List<Map<String, dynamic>> _data = [];
 
   BloC(Api api)
       : assert(api != null),
@@ -44,13 +44,17 @@ class BloC {
   }
 
   Stream<BlocState> _requestData() async* {
+    print("_requestData");
+
     yield BlocState.START;
 
     try {
       yield BlocState.LOADING;
-      _data = await _api.requestData();
+//      await Future.delayed(new Duration(seconds: 2));
 
-      await Future.delayed(new Duration(seconds: 2));
+      var data = await _api.requestData();
+      _data.clear();
+      _data.addAll(data);
 
       if (_data.isEmpty) {
         yield BlocState.DATA_EMPTY;
@@ -58,11 +62,23 @@ class BloC {
         yield BlocState.DATA_READY;
       }
     } catch (error) {
+      print(error);
       yield BlocState.ERROR;
     }
   }
 
   Future<void> refresh() async {
     print("refresh");
+
+    try {
+//      await Future.delayed(new Duration(seconds: 2));
+      final data = await _api.requestData();
+      _data.addAll(data);
+
+      _subject.add(BlocState.DATA_READY);
+    } catch (error) {
+      print(error);
+      _subject.add(BlocState.ERROR);
+    }
   }
 }
