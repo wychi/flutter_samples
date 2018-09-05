@@ -20,7 +20,7 @@ class BloC {
       : assert(api != null),
         _api = api {
     _subject = new PublishSubject<BlocState>();
-    _stateStream = _subject.startWith(state);
+    _stateStream = _subject.stream;
   }
 
   void initState() {}
@@ -49,6 +49,8 @@ class BloC {
     yield BlocState.START;
 
     try {
+      yield BlocState.START;
+
       yield BlocState.LOADING;
 //      await Future.delayed(new Duration(seconds: 2));
 
@@ -81,4 +83,6 @@ class BloC {
       _subject.add(BlocState.ERROR);
     }
   }
+
+  loadMore() {}
 }

@@ -11,7 +11,7 @@ class Api {
     return _sInstance ??= new Api._();
   }
 
-  Future<List<Map<String, dynamic>>> requestData() async {
+  Future<List<Map<String, dynamic>>> requestData({page, limit}) async {
     print("Api requestData");
     try {
       var qs = {
