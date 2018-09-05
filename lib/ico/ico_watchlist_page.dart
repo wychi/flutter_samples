@@ -84,10 +84,12 @@ class _IcoWatchlistPageState extends State<IcoWatchlistPage> {
               }
 
               viewModel.mapData['onMenuClicked'] = (action) async {
-                bool remove =
-                    await _promptRemoveItemDialog(context, viewModel, idx);
-                if (remove) {
-                  _bloc.removeItem(idx, viewModel);
+                if (action == "remove") {
+                  bool remove =
+                      await _promptRemoveItemDialog(context, viewModel, idx);
+                  if (remove) {
+                    _bloc.removeItem(idx, viewModel);
+                  }
                 }
               };
 
