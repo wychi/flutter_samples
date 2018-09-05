@@ -9,6 +9,8 @@ const IMAGE_URL =
     "https://imgtokens.ksmobile.com/4746_PSKToDhFeEVzEFym29Tq8GaE5lAoKhC8i9YW3w9o-151x151.png";
 enum IcoStage { PreSale, PreSale_Whitelist }
 
+enum MENU_OPTIONS { REMOVE }
+
 class IcoWatchListItem extends StatelessWidget {
   final bool forDesign;
   final String name;
@@ -16,7 +18,7 @@ class IcoWatchListItem extends StatelessWidget {
   final String iconUrl;
   final IcoStage stage;
   final DateTime startTs;
-  final VoidCallback onMenuClicked;
+  final MenuCallback onMenuClicked;
   final VoidCallback onItemClicked;
 
   IcoWatchListItem({
@@ -60,7 +62,7 @@ class IcoWatchListItem extends StatelessWidget {
           },
       child: CardWidget(
         onMenuClicked: onMenuClicked ??
-            () {
+            (action) {
               print("onMenuClicked is not given. use empty function");
             },
         child: buildBody(),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/styles.dart';
 
+typedef MenuCallback = void Function(String action);
+
 class CardWidget extends StatelessWidget {
   final Widget child;
-  final VoidCallback onMenuClicked;
+  final MenuCallback onMenuClicked;
 
   CardWidget({this.child, this.onMenuClicked});
 
@@ -32,11 +34,42 @@ class CardWidget extends StatelessWidget {
       child: SizedBox(
         width: 44.0,
         height: 44.0,
-        child: IconButton(
-          key: Key("menu"),
-          onPressed: onMenuClicked,
-          icon: Icon(Icons.more_vert),
-          color: Styles.cnm_white,
+        child: LayoutBuilder(
+          builder: (context, _) {
+            return IconButton(
+              key: Key("menu"),
+              onPressed: () async {
+                final RenderBox button = context.findRenderObject();
+                print(context);
+
+                final RenderBox overlay =
+                    Overlay.of(context).context.findRenderObject();
+                final RelativeRect position = new RelativeRect.fromRect(
+                  new Rect.fromPoints(
+                    button.localToGlobal(button.size.bottomRight(Offset.zero)),
+                    button.localToGlobal(button.size.bottomRight(Offset.zero)),
+                  ),
+                  Offset.zero & overlay.size,
+                );
+
+                print(position);
+
+                var action = await showMenu(
+                    context: context,
+                    position: position,
+                    items: <PopupMenuEntry<String>>[
+                      const PopupMenuItem<String>(
+                        value: "remove",
+                        child: const Text('Remove'),
+                      ),
+                    ]);
+
+                if (onMenuClicked != null) onMenuClicked(action);
+              },
+              icon: Icon(Icons.more_vert),
+              color: Styles.cnm_white,
+            );
+          },
         ),
       ),
     );

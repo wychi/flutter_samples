@@ -13,7 +13,7 @@ void main() {
             child: Container(
               height: 50.0,
             ),
-            onMenuClicked: () {
+            onMenuClicked: (_) {
               clicked = true;
             }),
       ),
