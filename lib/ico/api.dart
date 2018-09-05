@@ -11,12 +11,13 @@ class Api {
     return _sInstance ??= new Api._();
   }
 
-  Future<List<Map<String, dynamic>>> requestData({page, limit}) async {
+  Future<List<Map<String, dynamic>>> requestData(
+      {int page = 0, int limit = 5}) async {
     print("Api requestData");
     try {
       var qs = {
-        "page": "0",
-        "limit": "5",
+        "page": "$page",
+        "limit": "$limit",
       };
       var uri = Uri.parse('https://api.ratingtoken.io/token/ICORankList')
           .replace(queryParameters: qs);

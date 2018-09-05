@@ -37,6 +37,7 @@ class _IcoWatchlistPageState extends State<IcoWatchlistPage> {
           case BlocState.LOADING:
             current = LoadingWidget();
             break;
+          case BlocState.LOAD_MORE:
           case BlocState.DATA_READY:
             current = _buildListView(context);
             break;
@@ -69,12 +70,20 @@ class _IcoWatchlistPageState extends State<IcoWatchlistPage> {
     return Container(
       child: RefreshIndicator(
         onRefresh: _bloc.refresh,
-        child: ListView.builder(
-          itemCount: _bloc.getItemCount(),
-          itemBuilder: (context, idx) {
-            IcoItemViewModel viewModel = _bloc.getItem(idx);
-            return IcoWatchListItem.sample(viewModel);
-          },
+        child: NotificationListener<ScrollNotification>(
+          onNotification: _bloc.onScroll,
+          child: ListView.builder(
+            itemCount: _bloc.getItemCount(),
+            itemBuilder: (context, idx) {
+              IcoItemViewModel viewModel = _bloc.getItem(idx);
+              if (viewModel is LoadingViewModel) {
+                print("show loading widget");
+                return LoadingWidget();
+              }
+
+              return IcoWatchListItem.sample(viewModel);
+            },
+          ),
         ),
       ),
     );

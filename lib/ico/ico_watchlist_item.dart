@@ -185,7 +185,6 @@ class IcoWatchListItem extends StatelessWidget {
   }
 
   Widget buildOpened(String strStage) {
-    print("buildOpened");
     var strOpenState = "Opened";
 
     return Stack(
@@ -225,7 +224,6 @@ class IcoWatchListItem extends StatelessWidget {
   }
 
   Stack buildPresale(String strStage) {
-    print("buildPresale");
     var days = DateTime.now().difference(startTs).inDays;
     var strStartDate =
         "Start date: ${DateFormat("yyyy-MM-dd").format(startTs)}";
