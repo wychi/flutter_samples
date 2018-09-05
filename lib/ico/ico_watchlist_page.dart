@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ico/api.dart';
 import 'package:flutter_app/ico/ico_bloc.dart';
@@ -81,11 +83,56 @@ class _IcoWatchlistPageState extends State<IcoWatchlistPage> {
                 return LoadingWidget();
               }
 
+              viewModel.mapData['onMenuClicked'] = () async {
+                bool remove =
+                    await _promptRemoveItemDialog(context, viewModel, idx);
+                if (remove) {
+                  _bloc.removeItem(idx, viewModel);
+                }
+              };
+
               return IcoWatchListItem.sample(viewModel);
             },
           ),
         ),
       ),
+    );
+  }
+
+  Future<bool> _promptRemoveItemDialog(
+      BuildContext context, IcoItemViewModel item, int idx) async {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return AlertDialog(
+          title: new Text("remove item"),
+          content: new SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  "remove #$idx",
+                ),
+                Text(item.name)
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            new FlatButton(
+              child: new Text('Yes'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

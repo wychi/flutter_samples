@@ -143,6 +143,10 @@ class BloC {
     return false;
   }
 
-  void removeItem(int idx) {}
+  void removeItem(int idx, [IcoItemViewModel item]) {
+    assert(idx >= 0 && idx < _data.length);
 
+    _data.removeAt(idx);
+    _updateState(BlocState.DATA_READY);
+  }
 }
