@@ -142,4 +142,7 @@ class BloC {
 
     return false;
   }
+
+  void removeItem(int idx) {}
+
 }

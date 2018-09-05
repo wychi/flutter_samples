@@ -136,15 +136,39 @@ void main() {
       });
 
       // Note: create another stream for comparison
-      var x = new StreamController<BlocState>();
-      bloc.stateStream.pipe(x);
       expect(
-        x.stream,
+        new StreamView(bloc.stateStream),
         emitsInOrder([BlocState.LOAD_MORE, BlocState.DATA_READY]),
       );
 
       await bloc.loadMore();
       expect(bloc.getItemCount(), equals(PAGE0.length + PAGE1.length));
     });
+  });
+
+  test('remove item', () async {
+    var PAGE0 = [
+      {"id": "1"},
+      {"id": "2"},
+      {"id": "3"}
+    ];
+
+    final api = MockApi();
+    final bloc = BloC(api);
+
+    when(api.requestData()).thenAnswer((_) {
+      return Future.value(PAGE0);
+    });
+
+    bloc.requestData();
+    await bloc.stateStream.any((state) => state == BlocState.DATA_READY);
+
+    expect(
+      new StreamView(bloc.stateStream),
+      emitsInOrder([BlocState.DATA_READY]),
+    );
+
+    bloc.removeItem(0);
+    expect(bloc.getItemCount(), PAGE0.length - 1);
   });
 }
